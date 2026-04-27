@@ -8,46 +8,35 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
-        /* === 1. GLOBAL THEME (The Dark Premium Look) === */
         body { background-color: #020617; background-image: radial-gradient(circle at top, #0f172a 0%, #020617 80%); color: #ffffff; font-family: 'Segoe UI', sans-serif; margin: 0; overflow: hidden; height: 100vh; }
         .hidden { display: none !important; }
         .screen { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: flex; flex-direction: column; background-color: transparent; }
         
-        /* === 2. SPLASH SCREEN & THE 4 ROTATING STARS === */
         #splash-screen { justify-content: center; align-items: center; z-index: 50; background-color: #020617; }
         .brand-name { font-size: 2.8em; font-weight: 900; letter-spacing: 6px; background: linear-gradient(to right, #d4af37, #facc15); -webkit-background-clip: text; -webkit-text-fill-color: transparent; z-index: 10; text-transform: uppercase; text-shadow: 0px 4px 15px rgba(212, 175, 55, 0.3); }
         .stars-ring { position: absolute; width: 260px; height: 260px; border-radius: 50%; border: 1px dashed rgba(212, 175, 55, 0.3); animation: spin 15s linear infinite; }
         .star { position: absolute; font-size: 1.5em; color: #d4af37; text-shadow: 0 0 10px rgba(212, 175, 55, 0.8); }
-        /* Positioning the 4 stars perfectly */
-        .s1 { top: -15px; left: 45%; } 
-        .s2 { bottom: -15px; left: 45%; } 
-        .s3 { left: -15px; top: 45%; } 
-        .s4 { right: -15px; top: 45%; }
+        .s1 { top: -15px; left: 45%; } .s2 { bottom: -15px; left: 45%; } .s3 { left: -15px; top: 45%; } .s4 { right: -15px; top: 45%; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* === 3. THE 3 LUXURY ENTRANCE GATES === */
         .auth-card { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 20px; margin-bottom: 15px; display: flex; align-items: center; gap: 20px; cursor: pointer; transition: 0.3s; width: 85%; max-width: 350px; }
         .auth-card:active { transform: scale(0.98); }
         .auth-icon { font-size: 2.2em; filter: drop-shadow(0 0 10px rgba(255,255,255,0.1)); }
         .auth-text { text-align: left; }
         .auth-title { margin: 0; font-size: 1.1em; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; }
         .auth-sub { margin: 0; font-size: 0.75em; color: #8a9bb8; margin-top: 3px; }
-        /* Gate Colors */
-        .card-player { border-left: 4px solid #3b82f6; } .card-player .auth-title { color: #3b82f6; } /* Blue */
-        .card-new { border-left: 4px solid #10b981; } .card-new .auth-title { color: #10b981; } /* Green */
-        .card-admin { border-left: 4px solid #ef4444; } .card-admin .auth-title { color: #ef4444; } /* Red */
+        .card-player { border-left: 4px solid #3b82f6; } .card-player .auth-title { color: #3b82f6; } 
+        .card-new { border-left: 4px solid #10b981; } .card-new .auth-title { color: #10b981; } 
+        .card-admin { border-left: 4px solid #ef4444; } .card-admin .auth-title { color: #ef4444; } 
 
-        /* === 4. GLOWING LIVE BADGE === */
         .live-badge { background: #ef4444; color: white; padding: 4px 8px; border-radius: 5px; font-size: 0.65em; font-weight: 900; letter-spacing: 2px; animation: pulse 1.5s infinite; border: 1px solid #7f1d1d; }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
 
-        /* === 5. MODALS (Popups for Login & Match Recorder) === */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); justify-content: center; align-items: center; z-index: 200; backdrop-filter: blur(5px); }
         .modal-box { background: #050a14; border: 1px solid #3b82f6; padding: 30px; border-radius: 15px; text-align: center; width: 85%; max-width: 400px; box-shadow: 0 0 20px rgba(59, 130, 246, 0.1); }
-        .secret-input { width: 100%; padding: 15px; margin: 10px 0; background: #020617; border: 1px solid #1e293b; color: #d4af37; text-align: center; border-radius: 10px; box-sizing: border-box; font-weight: bold; font-size: 1.1em; }
+        .secret-input { width: 100%; padding: 15px; margin: 10px 0; background: #020617; border: 1px solid #1e293b; color: white; text-align: center; border-radius: 10px; box-sizing: border-box; font-weight: bold; font-size: 1.1em; }
         .manager-btn { color: white; border: none; width: 100%; padding: 15px; border-radius: 12px; font-weight: 900; margin-top: 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* === 6. DASHBOARD LAYOUT & NAVIGATION === */
         .header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); position: relative; background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(10px); z-index: 10; }
         .page-title { font-size: 1.5em; color: #d4af37; margin: 0; letter-spacing: 3px; text-transform: uppercase; font-weight: 900; }
         .content-area { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
@@ -56,22 +45,11 @@
         .nav-item.active { color: #3b82f6; font-weight: bold; text-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
         .nav-icon { font-size: 1.6em; display: block; margin-bottom: 5px; }
 
-        /* === 7. OVERLAPPING AVATARS (For 2v2 Tournament Cards) === */
-        .tourney-card { background: rgba(15, 23, 42, 0.9); border: 1px solid #1e293b; border-radius: 18px; padding: 20px; margin-bottom: 20px; border-left: 4px solid #3b82f6; position: relative; overflow: hidden; }
-        .tourney-card::before { content: ''; position: absolute; top: -50px; right: -50px; width: 100px; height: 100px; background: rgba(59, 130, 246, 0.1); border-radius: 50%; filter: blur(20px); }
-        .card-badge { font-size: 0.65em; background: rgba(212, 175, 55, 0.1); color: #d4af37; padding: 5px 10px; border-radius: 6px; text-transform: uppercase; border: 1px solid rgba(212, 175, 55, 0.3); font-weight: bold; }
-        .team-display { display: flex; align-items: center; background: rgba(2, 6, 23, 0.5); padding: 10px; border-radius: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .avatar-group { display: flex; margin-right: 15px; }
-        .avatar-group .circle { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #0f172a; background: linear-gradient(135deg, #1e293b, #334155); display: flex; justify-content: center; align-items: center; font-size: 1.2em; font-weight: bold; color: #8a9bb8; }
-        .avatar-group .circle:nth-child(2) { margin-left: -15px; background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; border-color: #020617; z-index: 2; }
-
-        /* === 8. DRAFTING ROOM INPUTS & SWITCHES === */
         .input-box { width: 100%; padding: 15px; box-sizing: border-box; background: rgba(15, 23, 42, 0.8); border: 1px solid #3b82f6; border-radius: 10px; color: white; margin-bottom: 15px; font-size: 1em; }
         .switch-container { display: flex; gap: 10px; margin-bottom: 20px; }
         .switch-btn { flex: 1; background: rgba(15, 23, 42, 0.5); border: 1px solid #1e293b; color: #8a9bb8; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase; font-size: 0.85em; }
         .switch-btn.active { background: rgba(59, 130, 246, 0.2); color: #3b82f6; border-color: #3b82f6; }
         
-        /* === 9. PRO/YOUTH POTS & LIST ROWS === */
         .player-row { background: rgba(15, 23, 42, 0.8); border: 1px solid #1e293b; border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         .custom-checkbox { width: 24px; height: 24px; cursor: pointer; accent-color: #d4af37; }
         .pot-controls { display: flex; gap: 8px; }
@@ -79,13 +57,11 @@
         .pot-btn.pro.selected { border-color: #d4af37; color: #d4af37; background: rgba(212, 175, 55, 0.1); box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
         .pot-btn.youth.selected { border-color: #10b981; color: #10b981; background: rgba(16, 185, 129, 0.1); box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
 
-        /* === 10. HALL OF FAME STANDINGS === */
         .leaderboard-row { background: rgba(15, 23, 42, 0.9); border: 1px solid #1e293b; border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; font-size: 0.95em; }
         .rank { width: 30px; text-align: center; color: #8a9bb8; font-weight: 900; font-size: 1.2em;}
         .col-stat { width: 40px; text-align: center; color: #8a9bb8; font-size: 0.85em; font-weight: bold; }
         .col-pts { width: 45px; text-align: center; font-weight: 900; color: #d4af37; font-size: 1.2em; }
         
-        /* === 11. VAR COLORED CARDS === */
         .var-card { padding: 15px; border-radius: 10px; margin-bottom: 15px; }
         .var-red { border-left: 4px solid #ef4444; background: rgba(239, 68, 68, 0.05); }
         .var-blue { border-left: 4px solid #3b82f6; background: rgba(59, 130, 246, 0.05); }
@@ -93,37 +69,25 @@
     </style>
 </head>
 <body>
+
     <div id="splash-screen" class="screen" style="justify-content:flex-start; padding-top:8vh; align-items:center;">
-        
         <div style="position: relative; width: 220px; height: 220px; display: flex; justify-content: center; align-items: center; margin-bottom: 40px;">
             <div class="stars-ring">
                 <div class="star s1">⭐</div><div class="star s2">⭐</div><div class="star s3">⭐</div><div class="star s4">⭐</div>
             </div>
             <div class="brand-name" style="font-size:2.2em;">FOOTBOLA</div>
         </div>
-
         <div class="auth-card card-player" onclick="document.getElementById('player-login').style.display='flex'">
             <div class="auth-icon">👤</div>
-            <div class="auth-text">
-                <p class="auth-title">Player Login</p>
-                <p class="auth-sub">Enter with ID and 4-Digit PIN</p>
-            </div>
+            <div class="auth-text"><p class="auth-title">Player Login</p><p class="auth-sub">Enter with ID and 4-Digit PIN</p></div>
         </div>
-
         <div class="auth-card card-new" onclick="document.getElementById('player-signup').style.display='flex'">
             <div class="auth-icon">📝</div>
-            <div class="auth-text">
-                <p class="auth-title">New Account</p>
-                <p class="auth-sub">Register name, photo, and PIN</p>
-            </div>
+            <div class="auth-text"><p class="auth-title">New Account</p><p class="auth-sub">Register name, photo, and PIN</p></div>
         </div>
-
         <div class="auth-card card-admin" onclick="document.getElementById('manager-login').style.display='flex'">
             <div class="auth-icon">⚙️</div>
-            <div class="auth-text">
-                <p class="auth-title">Admin Access</p>
-                <p class="auth-sub">Master PINs required</p>
-            </div>
+            <div class="auth-text"><p class="auth-title">Admin Access</p><p class="auth-sub">Master PINs required</p></div>
         </div>
     </div>
 
@@ -141,17 +105,11 @@
         <div class="modal-box" style="border-color:#10b981; box-shadow: 0 0 20px rgba(16, 185, 129, 0.1);">
             <h3 style="color:#10b981; font-weight:900; margin-top:0;">CREATE ACCOUNT</h3>
             <p style="color:gray; font-size:0.8em; margin-bottom:15px;">Submit info for Admin approval.</p>
-            
             <input type="text" id="reg-name" class="secret-input" placeholder="Full Name" style="border-color:rgba(16, 185, 129, 0.5);">
-            
-            <label for="reg-pic" style="display:block; background:rgba(16, 185, 129, 0.05); border:1px dashed #10b981; color:#10b981; padding:15px; border-radius:10px; margin:10px 0; cursor:pointer; font-weight:bold;">
-                📷 UPLOAD PICTURE
-            </label>
+            <label for="reg-pic" style="display:block; background:rgba(16, 185, 129, 0.05); border:1px dashed #10b981; color:#10b981; padding:15px; border-radius:10px; margin:10px 0; cursor:pointer; font-weight:bold;">📷 UPLOAD PICTURE</label>
             <input type="file" id="reg-pic" accept="image/*" class="hidden">
-            
             <input type="password" id="reg-pin" class="secret-input" placeholder="Create 4-Digit PIN" maxlength="4" style="border-color:rgba(16, 185, 129, 0.5);">
-            
-            <button class="manager-btn" style="background:linear-gradient(135deg, #059669, #10b981);" onclick="submitNewAccount()">SUBMIT REQUEST</button>
+            <button class="manager-btn" id="submit-reg-btn" style="background:linear-gradient(135deg, #059669, #10b981);" onclick="submitNewAccount()">SUBMIT REQUEST</button>
             <p style="color:#8a9bb8; margin-top:20px; cursor:pointer; font-size:0.8em; font-weight:bold;" onclick="document.getElementById('player-signup').style.display='none'">CANCEL</p>
         </div>
     </div>
@@ -169,23 +127,21 @@
     <div id="match-recorder" class="modal">
         <div class="modal-box" style="border-color:#10b981; box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);">
             <h3 style="color:#10b981; font-weight:900; letter-spacing:2px; margin-top:0;">⚽ VAR ROOM</h3>
-            
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; margin-top:20px;">
                 <select id="team-a" class="secret-input" style="width:45%; padding:10px; font-size:0.9em;"></select>
                 <span style="font-weight:900; color:#ef4444;">VS</span>
                 <select id="team-b" class="secret-input" style="width:45%; padding:10px; font-size:0.9em;"></select>
             </div>
-            
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <input type="number" id="score-a" class="secret-input" style="width:35%; text-align:center; font-size:1.5em; color:#d4af37;" placeholder="0">
                 <span style="font-weight:bold; color:#8a9bb8; font-size:0.8em;">GOALS</span>
                 <input type="number" id="score-b" class="secret-input" style="width:35%; text-align:center; font-size:1.5em; color:#d4af37;" placeholder="0">
             </div>
-
             <button class="manager-btn" style="background:linear-gradient(135deg, #10b981, #059669); margin-top:15px; margin-bottom:0;" onclick="saveMatch()">💾 CONFIRM RESULT</button>
             <p style="color:#8a9bb8; margin-top:20px; cursor:pointer; font-size:0.8em; font-weight:bold;" onclick="document.getElementById('match-recorder').style.display='none'">CANCEL</p>
         </div>
     </div>
+
     <div id="main-dashboard" class="screen hidden">
         <div class="header">
             <h2 class="page-title" id="tab-title">Arena</h2>
@@ -196,9 +152,7 @@
             
             <div id="tab-tournaments">
                 <button id="create-btn" class="manager-btn hidden manager-only" onclick="document.getElementById('tab-drafting').classList.remove('hidden'); document.getElementById('tab-tournaments').classList.add('hidden');">➕ CREATE TOURNAMENT</button>
-                <div id="live-tourney-list">
-                    <p style="color:#8a9bb8; text-align:center; font-style:italic; margin-top:40px;">Arena is quiet. Waiting for the whistle...</p>
-                </div>
+                <div id="live-tourney-list"><p style="color:#8a9bb8; text-align:center; font-style:italic; margin-top:40px;">Arena is quiet...</p></div>
             </div>
 
             <div id="tab-drafting" class="hidden">
@@ -206,13 +160,11 @@
                     <p style="color:#3b82f6; font-weight:bold; margin:0; font-size:0.8em;">TOURNAMENT IDENTITY</p>
                     <input type="text" id="t-name" class="secret-input" placeholder="Cup Name (e.g. Ramadan Cup)">
                 </div>
-                
                 <p style="color:#8a9bb8; font-size:0.75em; font-weight:bold; text-transform:uppercase;">1. SELECT FORMAT</p>
                 <div class="switch-container">
                     <button class="switch-btn active" id="btn-1v1" onclick="setFormat('1v1')">1v1 SINGLES</button>
                     <button class="switch-btn" id="btn-2v2" onclick="setFormat('2v2')">2v2 DOUBLES</button>
                 </div>
-
                 <div id="structure-section" class="hidden">
                     <p style="color:#8a9bb8; font-size:0.75em; font-weight:bold; text-transform:uppercase;">2. SELECT STRUCTURE</p>
                     <div class="switch-container">
@@ -220,52 +172,32 @@
                         <button class="switch-btn" id="btn-league" onclick="setType('league')">LEAGUE</button>
                     </div>
                 </div>
-
                 <p style="color:#d4af37; font-size:0.75em; font-weight:bold; text-transform:uppercase; margin-top:20px;">3. ENROLL PLAYERS</p>
                 <div id="draft-players-list"></div>
-
-                <button class="start-btn" onclick="startTournament()">🎲 START TOURNAMENT</button>
+                <button class="manager-btn" style="background:linear-gradient(135deg, #d4af37, #facc15); color:#020617;" onclick="startTournament()">🎲 START TOURNAMENT</button>
                 <p style="color:gray; text-align:center; cursor:pointer; font-size:0.8em; margin-top:15px;" onclick="document.getElementById('tab-drafting').classList.add('hidden'); document.getElementById('tab-tournaments').classList.remove('hidden');">BACK TO ARENA</p>
             </div>
 
             <div id="tab-locker" class="hidden">
                 <div class="manager-only hidden var-red" style="padding:20px; border-radius:15px; margin-bottom:25px; border:1px solid rgba(239, 68, 68, 0.2);">
-                    <h3 style="color:#ef4444; margin:0; letter-spacing:1px; display:flex; align-items:center; gap:10px;">📥 PENDING REQUESTS</h3>
-                    <p style="color:#8a9bb8; font-size:0.8em; margin-bottom:15px;">Approve new players to update the database.</p>
+                    <h3 style="color:#ef4444; margin:0; letter-spacing:1px;">📥 PENDING REQUESTS</h3>
                     <div id="pending-requests-list"></div>
                 </div>
-
                 <h3 style="color:#3b82f6; text-transform:uppercase; font-size:1em; letter-spacing:1px; border-bottom:1px solid #1e293b; padding-bottom:10px;">🛡️ REGISTERED PLAYERS</h3>
                 <div id="locker-players-list"></div>
             </div>
 
             <div id="tab-history" class="hidden">
-                <div style="text-align:center; margin-bottom:30px;">
-                    <span style="font-size:3em; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.4));">👑</span>
-                    <h2 style="color:#d4af37; margin:0; text-transform:uppercase; letter-spacing:4px;">HALL OF FAME</h2>
-                </div>
+                <div style="text-align:center; margin-bottom:30px;"><span style="font-size:3em; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.4));">👑</span><h2 style="color:#d4af37; margin:0; text-transform:uppercase; letter-spacing:4px;">HALL OF FAME</h2></div>
                 <div id="history-list"></div>
             </div>
 
             <div id="tab-var" class="hidden">
                 <h3 style="color:#ef4444; text-align:center; margin-top:0; margin-bottom:25px; letter-spacing:2px;">⚖️ OFFICIAL RULES</h3>
-                
-                <div class="var-card var-red">
-                    <p style="color:#ef4444; font-weight:bold; margin:0; font-size:1.1em;">🟥 Red Cards</p>
-                    <p style="font-size:0.85em; color:#8a9bb8; margin-top:5px; line-height:1.5;">Direct red card = 1-match suspension + (-1) Point deduction. Manager must apply this manually in the Control Room.</p>
-                </div>
-
-                <div class="var-card var-blue">
-                    <p style="color:#3b82f6; font-weight:bold; margin:0; font-size:1.1em;">🏆 Tiebreakers</p>
-                    <p style="font-size:0.85em; color:#8a9bb8; margin-top:5px; line-height:1.5;">Equal points? Goal Difference (GD) decides. If GD is equal, the Head-to-Head result is the final judge.</p>
-                </div>
-                
-                <div class="var-card var-gold">
-                    <p style="color:#d4af37; font-weight:bold; margin:0; font-size:1.1em;">🌳 Survival Tree</p>
-                    <p style="font-size:0.85em; color:#8a9bb8; margin-top:5px; line-height:1.5;">Losers go home immediately. Winners advance. Manager calculates brackets until the Final.</p>
-                </div>
+                <div class="var-card var-red"><p style="color:#ef4444; font-weight:bold; margin:0; font-size:1.1em;">🟥 Red Cards</p><p style="font-size:0.85em; color:#8a9bb8; margin-top:5px; line-height:1.5;">Direct red card = 1-match suspension + (-1) Point deduction. Manager must apply this manually in the Control Room.</p></div>
+                <div class="var-card var-blue"><p style="color:#3b82f6; font-weight:bold; margin:0; font-size:1.1em;">🏆 Tiebreakers</p><p style="font-size:0.85em; color:#8a9bb8; margin-top:5px; line-height:1.5;">Equal points? Goal Difference (GD) decides. If GD is equal, the Head-to-Head result is the final judge.</p></div>
+                <div class="var-card var-gold"><p style="color:#d4af37; font-weight:bold; margin:0; font-size:1.1em;">🌳 Survival Tree</p><p style="font-size:0.85em; color:#8a9bb8; margin-top:5px; line-height:1.5;">Losers go home immediately. Winners advance. Manager calculates brackets until the Final.</p></div>
             </div>
-
         </div>
 
         <div class="bottom-nav">
@@ -276,48 +208,29 @@
         </div>
     </div>
 
-    <div id="screen-cup-details" class="screen hidden" style="z-index: 200;">
+    <div id="screen-cup-details" class="screen hidden" style="z-index: 200; background-color: #020617;">
         <div class="header">
             <button onclick="closeDetails()" style="position:absolute; left:20px; top:20px; background:none; border:none; color:#3b82f6; font-size:1.2em;">🔙</button>
             <h2 class="page-title" id="detail-title" style="font-size:1.2em;">CUP NAME</h2>
             <span class="live-badge" style="position:absolute; right:20px; top:25px;">LIVE</span>
         </div>
-        
         <div class="content-area">
-            
             <div class="var-gold" style="padding:15px; border-radius:15px; margin-bottom:25px; border:1px solid rgba(212, 175, 55, 0.1);">
                 <h3 style="color:#d4af37; text-align:center; margin-top:0; text-transform:uppercase; font-size:1em;">🏆 CUP STANDINGS</h3>
-                
-                <div class="leaderboard-row" style="background: transparent; border:none; padding:5px 12px; margin-bottom:0;">
-                    <div class="rank" style="font-size:0.8em; color:gray;">#</div>
-                    <div style="flex-grow:1; margin-left:15px; color:gray; font-size:0.7em; font-weight:bold;">TEAM</div>
-                    <div class="col-stat">PL</div>
-                    <div class="col-stat">GD</div>
-                    <div class="col-pts" style="color:gray; font-size:0.7em;">PTS</div>
-                </div>
-
+                <div class="leaderboard-row" style="background: transparent; border:none; padding:5px 12px; margin-bottom:0;"><div class="rank" style="font-size:0.8em; color:gray;">#</div><div style="flex-grow:1; margin-left:15px; color:gray; font-size:0.7em; font-weight:bold;">TEAM</div><div class="col-stat">PL</div><div class="col-stat">GD</div><div class="col-pts" style="color:gray; font-size:0.7em;">PTS</div></div>
                 <div id="standings-container"></div>
             </div>
-
             <h3 style="color:#10b981; text-transform:uppercase; letter-spacing:2px; font-size:1em; border-bottom:1px solid #1e293b; padding-bottom:10px;">⚽ RECENT MATCHES</h3>
-            
-            <button class="manager-btn manager-only hidden" style="background: linear-gradient(135deg, #10b981, #059669);" onclick="openMatchRecorder()">
-                ➕ RECORD NEW MATCH
-            </button>
-            
+            <button class="manager-btn manager-only hidden" style="background: linear-gradient(135deg, #10b981, #059669);" onclick="openMatchRecorder()">➕ RECORD NEW MATCH</button>
             <div id="matches-list"></div>
-
             <div class="manager-only hidden" style="margin-top: 50px; text-align:center;">
-                <button class="start-btn" style="background: linear-gradient(135deg, #ef4444, #991b1b); color:white; border:none;" onclick="endTournament()">
-                    🛑 CONCLUDE TOURNAMENT
-                </button>
+                <button class="manager-btn" style="background: linear-gradient(135deg, #ef4444, #991b1b);" onclick="endTournament()">🛑 CONCLUDE TOURNAMENT</button>
                 <p style="color:#ef4444; font-size:0.75em; margin-top:10px; font-weight:bold;">Danger: This permanently archives the cup and awards 🏆 trophies.</p>
             </div>
-
         </div>
     </div>
+
     <script>
-        // --- DATABASE CONNECTION ---
         const supabaseUrl = 'https://jvkjjpqlmofprmugkbxs.supabase.co';
         const supabaseKey = 'sb_publishable_Dhyyi9tDjzS6cjSeqAK-_g_xL1DctLB'; 
         const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
@@ -328,7 +241,6 @@
         let currentCupId = null;
         let cupPlayersData = {}; 
 
-        // === 1. LOGIN GATES LOGIC ===
         function verifyManager() {
             let c1 = document.getElementById('admin-code1').value;
             let c2 = document.getElementById('admin-code2').value;
@@ -348,31 +260,47 @@
             
             const { data, error } = await supabaseClient.from('players').select('*').eq('player_id', pid).eq('pin', pin).single();
             if(data) {
-                if(data.points === -1) {
-                    alert("ACCOUNT PENDING: The Admin has not approved your account yet.");
-                } else {
-                    document.getElementById('player-login').style.display = 'none';
-                    openDashboard();
-                }
+                if(data.points === -1) { alert("ACCOUNT PENDING: The Admin has not approved your account yet."); } 
+                else { document.getElementById('player-login').style.display = 'none'; openDashboard(); }
             } else { alert("ACCESS DENIED: Invalid ID or PIN."); }
         }
 
         async function submitNewAccount() {
+            let btn = document.getElementById('submit-reg-btn');
+            btn.innerText = "UPLOADING..."; btn.disabled = true;
+
             let name = document.getElementById('reg-name').value;
             let pin = document.getElementById('reg-pin').value;
-            if(!name || !pin) return alert("ERROR: Name and PIN are required.");
+            let picInput = document.getElementById('reg-pic');
+            
+            if(!name || !pin) { btn.innerText = "SUBMIT REQUEST"; btn.disabled = false; return alert("ERROR: Name and PIN are required."); }
             
             let safeName = name.toLowerCase().replace(/[^a-z0-9]/g, '');
             let uniqueId = safeName + '_' + Math.floor(Math.random() * 1000);
-            
-            // Points = -1 means it is waiting in the Requests Box
+            let finalAvatarUrl = null;
+
+            if (picInput.files && picInput.files.length > 0) {
+                let file = picInput.files[0];
+                let fileExt = file.name.split('.').pop();
+                let fileName = `${uniqueId}.${fileExt}`; 
+
+                const { data: uploadData, error: uploadError } = await supabaseClient.storage.from('avatars').upload(fileName, file);
+
+                if (!uploadError) {
+                    const { data: urlData } = supabaseClient.storage.from('avatars').getPublicUrl(fileName);
+                    finalAvatarUrl = urlData.publicUrl;
+                } else { alert("Warning: Could not upload picture. Account will be created without it."); }
+            }
+
             const { error } = await supabaseClient.from('players').insert([{ 
-                player_id: uniqueId, name: name + " (Pending)", pin: pin, points: -1, goals: 0, trophies: 0, red_cards: 0, stars: 0 
+                player_id: uniqueId, name: name + " (Pending)", pin: pin, points: -1, goals: 0, trophies: 0, red_cards: 0, stars: 0, avatar_url: finalAvatarUrl 
             }]);
             
+            btn.innerText = "SUBMIT REQUEST"; btn.disabled = false;
+
             if(error) alert("Error: " + error.message);
             else {
-                alert(`REQUEST SUBMITTED!\nYour Login ID: ${uniqueId}\nYour PIN: ${pin}\nTake a screenshot! Wait for Admin approval.`);
+                alert(`REQUEST SUBMITTED!\nYour Login ID: ${uniqueId}\nYour PIN: ${pin}\nPlease wait for Admin approval.`);
                 document.getElementById('player-signup').style.display = 'none';
             }
         }
@@ -383,7 +311,6 @@
             fetchActiveTournaments();
         }
 
-        // === 2. NAVIGATION (THE 4 TABS) ===
         function switchTab(tabId, title) {
             ['tournaments', 'history', 'drafting', 'locker', 'var'].forEach(id => { document.getElementById('tab-' + id).classList.add('hidden'); });
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -396,14 +323,14 @@
             if(tabId === 'history') loadHistory();
         }
 
-        // === 3. MANAGER REQUESTS BOX ===
         async function loadPendingRequests() {
             const list = document.getElementById('pending-requests-list');
             const { data } = await supabaseClient.from('players').select('*').eq('points', -1);
             list.innerHTML = '';
             if(!data || data.length === 0) { list.innerHTML = '<p style="color:gray; font-size:0.8em; text-align:center;">No pending requests.</p>'; return; }
             data.forEach(p => {
-                list.innerHTML += `<div style="background:rgba(2,6,23,0.8); padding:10px; border-radius:10px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #ef4444;"><span style="color:white; font-weight:bold;">${p.name}</span><button class="start-btn" style="width:auto; padding:5px 15px; margin:0; font-size:0.8em;" onclick="approvePlayer('${p.id}', '${p.name}')">APPROVE</button></div>`;
+                let imgHtml = p.avatar_url ? `<img src="${p.avatar_url}" style="width:30px; height:30px; border-radius:50%; object-fit:cover; margin-right:10px;">` : '';
+                list.innerHTML += `<div style="background:rgba(2,6,23,0.8); padding:10px; border-radius:10px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #ef4444;"><div style="display:flex; align-items:center;">${imgHtml}<span style="color:white; font-weight:bold;">${p.name}</span></div><button class="manager-btn" style="width:auto; padding:5px 15px; margin:0; font-size:0.8em; background:#ef4444;" onclick="approvePlayer('${p.id}', '${p.name}')">APPROVE</button></div>`;
             });
         }
 
@@ -419,12 +346,30 @@
             const { data } = await supabaseClient.from('players').select('*').gte('points', 0).order('name');
             list.innerHTML = '';
             if(!data || data.length === 0) { list.innerHTML = '<p style="color:gray;text-align:center;">Roster Empty.</p>'; return; }
+            
             data.forEach(p => {
-                list.innerHTML += `<div class="leaderboard-row" style="justify-content:space-between;"><span style="font-weight:900; text-transform:uppercase;">${p.name}</span><span style="font-size:0.65em; color:#3b82f6; background:rgba(59, 130, 246, 0.1); padding:5px 10px; border-radius:5px; border:1px solid rgba(59, 130, 246, 0.3);">ID: ${p.player_id}</span></div>`;
+                let imgHtml = p.avatar_url 
+                    ? `<img src="${p.avatar_url}" style="width:40px; height:40px; border-radius:50%; border:2px solid #3b82f6; object-fit:cover; margin-right:15px;">` 
+                    : `<div style="width:40px; height:40px; border-radius:50%; background:#1e293b; border:2px solid #3b82f6; display:flex; justify-content:center; align-items:center; font-weight:bold; color:gray; margin-right:15px;">?</div>`;
+                
+                let deleteBtn = isManager ? `<button style="background:transparent; border:none; color:#ef4444; font-size:1.2em;" onclick="deletePlayer('${p.id}', '${p.name}')">🗑️</button>` : '';
+
+                list.innerHTML += `<div class="leaderboard-row" style="justify-content:space-between; align-items:center;">
+                    <div style="display:flex; align-items:center;">${imgHtml}<span style="font-weight:900; text-transform:uppercase;">${p.name}</span></div>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="font-size:0.65em; color:#3b82f6; background:rgba(59, 130, 246, 0.1); padding:5px 10px; border-radius:5px;">ID: ${p.player_id}</span>
+                        ${deleteBtn}
+                    </div>
+                </div>`;
             });
         }
 
-        // === 4. HALL OF FAME ===
+        async function deletePlayer(dbId, playerName) {
+            if(!confirm(`WARNING: Are you sure you want to permanently delete ${playerName}? All their history will be lost.`)) return;
+            await supabaseClient.from('players').delete().eq('id', dbId);
+            loadLockerPlayers(); loadHistory();
+        }
+
         async function loadHistory() {
             const list = document.getElementById('history-list');
             list.innerHTML = '<p style="color:gray;text-align:center;">Syncing History...</p>';
@@ -434,13 +379,18 @@
             data.forEach((p, i) => {
                 let r = i===0?'<span style="font-size:1.5em; filter: drop-shadow(0 0 5px #d4af37);">👑</span>':(i+1);
                 let rowStyle = i===0 ? 'border-color:#d4af37; background:rgba(212, 175, 55, 0.1);' : '';
+                let imgHtml = p.avatar_url ? `<img src="${p.avatar_url}" style="width:35px; height:35px; border-radius:50%; object-fit:cover; margin-right:10px; border:1px solid #d4af37;">` : '';
+                
                 list.innerHTML += `
                     <div class="leaderboard-row" style="${rowStyle}">
                         <div class="rank">${r}</div>
-                        <div style="flex-grow:1; margin-left:15px;">
-                            <div style="font-weight:900; text-transform:uppercase;">${p.name}</div>
-                            <div style="font-size:0.7em; color:#8a9bb8; margin-top:5px; font-weight:bold;">
-                                <span style="color:#facc15;">⭐${p.stars}</span> &nbsp;|&nbsp; <span style="color:#10b981;">⚽${p.goals}</span> &nbsp;|&nbsp; <span style="color:#d4af37;">🏆${p.trophies}</span>
+                        <div style="flex-grow:1; margin-left:10px; display:flex; align-items:center;">
+                            ${imgHtml}
+                            <div>
+                                <div style="font-weight:900; text-transform:uppercase;">${p.name}</div>
+                                <div style="font-size:0.7em; color:#8a9bb8; margin-top:3px; font-weight:bold;">
+                                    <span style="color:#facc15;">⭐${p.stars}</span> &nbsp;|&nbsp; <span style="color:#10b981;">⚽${p.goals}</span> &nbsp;|&nbsp; <span style="color:#d4af37;">🏆${p.trophies}</span>
+                                </div>
                             </div>
                         </div>
                         <div style="color:#3b82f6; font-weight:900; font-size:1.6em; text-align:right;">${p.points}<span style="display:block; font-size:0.3em; color:gray; margin-top:-5px;">PTS</span></div>
@@ -448,7 +398,6 @@
             });
         }
 
-        // === 5. THE ARENA & DRAFTING ===
         async function fetchActiveTournaments() {
             const list = document.getElementById('live-tourney-list');
             list.innerHTML = '<p style="color:gray; text-align:center; font-style:italic; margin-top:40px;">Syncing Arena...</p>';
@@ -461,9 +410,12 @@
                     ? `<div style="display:flex; align-items:center; background:rgba(2,6,23,0.5); padding:10px; border-radius:12px; margin-bottom:15px; border:1px solid rgba(255,255,255,0.05);"><div style="display:flex; margin-right:15px;"><div style="width:30px;height:30px;border-radius:50%;background:#1e293b;border:2px solid #020617;display:flex;justify-content:center;align-items:center;font-weight:bold;color:gray;">?</div><div style="width:30px;height:30px;border-radius:50%;background:#3b82f6;border:2px solid #020617;margin-left:-10px;display:flex;justify-content:center;align-items:center;font-weight:bold;color:white;">?</div></div><span style="font-size:0.7em; color:#8a9bb8; font-weight:bold;">DOUBLES MATCHMAKING</span></div>`
                     : `<div style="display:flex; align-items:center; background:rgba(2,6,23,0.5); padding:10px; border-radius:12px; margin-bottom:15px; border:1px solid rgba(255,255,255,0.05);"><div style="width:30px;height:30px;border-radius:8px;background:#1e293b;border:2px solid #020617;display:flex;justify-content:center;align-items:center;font-weight:bold;color:gray;margin-right:15px;">P</div><span style="font-size:0.7em; color:#8a9bb8; font-weight:bold;">SINGLES DIVISION</span></div>`;
 
+                let deleteCupBtn = isManager ? `<button style="background:transparent; border:none; color:#ef4444; font-size:1.2em; cursor:pointer; position:absolute; top:20px; right:20px;" onclick="deleteTournament('${cup.id}', '${cup.name}')">🗑️</button>` : '';
+
                 list.innerHTML += `
                     <div style="background:rgba(15,23,42,0.9); border:1px solid #1e293b; border-radius:18px; padding:20px; margin-bottom:20px; border-left:4px solid #3b82f6; position:relative; overflow:hidden;">
-                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:15px;">
+                        ${deleteCupBtn}
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:15px; padding-right:30px;">
                             <h3 style="font-size:1.3em; font-weight:900; margin:0; text-transform:uppercase;">${cup.name}</h3>
                             <span style="font-size:0.65em; background:rgba(212,175,55,0.1); color:#d4af37; padding:5px 10px; border-radius:6px; border:1px solid rgba(212,175,55,0.3); font-weight:bold;">${cup.type}</span>
                         </div>
@@ -471,6 +423,12 @@
                         <button class="manager-btn" style="background:transparent; border:1px solid #3b82f6; color:#3b82f6; margin-bottom:0;" onclick="openDetails('${cup.id}', '${cup.name}', '${cup.format}')">ENTER CONTROL ROOM</button>
                     </div>`;
             });
+        }
+
+        async function deleteTournament(cupId, cupName) {
+            if(!confirm(`WARNING: Cancel and delete the ${cupName} tournament permanently? Matches will be lost.`)) return;
+            await supabaseClient.from('tournaments').delete().eq('id', cupId);
+            fetchActiveTournaments();
         }
 
         function setFormat(f) {
@@ -490,10 +448,11 @@
             if(!data || data.length === 0) return;
             data.forEach(p => { 
                 let pid = p.player_id || p.id;
+                let imgHtml = p.avatar_url ? `<img src="${p.avatar_url}" style="width:25px; height:25px; border-radius:50%; object-fit:cover; margin-right:10px;">` : '';
                 let controls = currentFormat === '1v1' 
                     ? `<input type="checkbox" style="width:24px;height:24px;accent-color:#d4af37;" class="custom-checkbox" data-id="${pid}">`
                     : `<div style="display:flex;gap:5px;"><button class="pot-btn pro" style="background:#020617; border:1px solid #1e293b; color:#8a9bb8; padding:8px 12px; border-radius:8px; font-size:0.7em; font-weight:bold;" onclick="selectPot(this, '${pid}', 'pro')">PRO</button><button class="pot-btn youth" style="background:#020617; border:1px solid #1e293b; color:#8a9bb8; padding:8px 12px; border-radius:8px; font-size:0.7em; font-weight:bold;" onclick="selectPot(this, '${pid}', 'youth')">YOUTH</button></div>`;
-                list.innerHTML += `<div class="leaderboard-row" style="justify-content:space-between;"><span style="font-weight:bold; text-transform:uppercase;">${p.name}</span>${controls}</div>`; 
+                list.innerHTML += `<div class="leaderboard-row" style="justify-content:space-between;"><div style="display:flex; align-items:center;">${imgHtml}<span style="font-weight:bold; text-transform:uppercase;">${p.name}</span></div>${controls}</div>`; 
             });
         }
 
@@ -519,7 +478,6 @@
             document.getElementById('t-name').value = ''; document.getElementById('tab-drafting').classList.add('hidden'); document.getElementById('tab-tournaments').classList.remove('hidden'); fetchActiveTournaments();
         }
 
-        // === 6. CONTROL ROOM & MATH CALCULATIONS ===
         async function openDetails(cupId, cupName, formatStr) {
             currentCupId = cupId; 
             document.getElementById('main-dashboard').classList.add('hidden'); document.getElementById('screen-cup-details').classList.remove('hidden');
@@ -582,7 +540,6 @@
             });
         }
 
-        // === 7. END TOURNAMENT (ARCHIVE AND AWARD) ===
         async function endTournament() {
             if(!confirm("WARNING: Concluding this cup permanently locks it and sends the Winner to the Hall of Fame. Proceed?")) return;
 
